@@ -110,22 +110,6 @@ def sudoku(xr,yr):
     if xr<60*4.5 and xr>-60*4.5 and yr<60*4.5 and yr>-60*4.5:
         posar_numero(xr,yr,tor,llista)
     else:
-        '''for i in range(len(llista)): #per mirar tots els quadrats
-            analitzar_llista(llista[i]) #mira cada quadrat
-        for k in range(3): #mira 3 files de quadrats
-            for i in range(3): #mira 3 nombres d'un mateix quadrat
-                fila=[]
-                for j in range(3): #mira 3 quadrats consecutius
-                    fila[100:100]=llista[j+3*k][0+3*i:3+3*i]
-                print(f"fila:{fila}")
-                analitzar_llista(fila)
-        for k in range(3): #mira 3 columnes de quadrats
-            for i in range(3): #mira 3 nombres d'un mateix quadrat
-                columna=[]
-                for j in range(3): #mira 3 quadrats diferents
-                    columna[100:100]=llista[j*3+k][i],llista[j*3+k][i+3],llista[j*3+k][i+6]
-                print(f"columna:{columna}")
-                analitzar_llista(columna)'''
         resoldre(llista,tor)
         
     
@@ -137,31 +121,23 @@ def analitzar_llista(llista):
                 if llista[i]==llista[j]:
                     print(f"Error: el valor en la posició {i} ({llista[i]}) és igual al valor en la posició {j} ({llista[j]}).")
                     suma+=1
-                else:
-                    print("Tot correcte")
     if suma!=0:
-        print(suma)
         error=True
         return error
     else:
-        print(suma)
         error=False
         return error
-#            elif llista[i]==0  or llista[j]==0:
-#                error=False
-#                return error
 
 
 def resoldre(llista,tor):
     nombres=['1','2','3','4','5','6','7','8','9']
-    error=True
+    possib=[[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]]]
     for i in range(9): #quadrat
         for j in range(9): #cel·la
             if llista[i][j]==0:
                 cont=0
-                while error==True and cont<9:
+                while cont<9:
                     llista[i][j]=nombres[cont]
-    #                    for n in range(3): #mira 3 nombres d'un mateix quadrat
                     fila=[]
                     for m in range(3): #mira 3 quadrats consecutius
                         if i<3:
@@ -179,7 +155,6 @@ def resoldre(llista,tor):
                         fila[100:100]=llista[k+m][0+n:3+n]
                     print(f"fila:{fila},{i},{j}")
                     error1=analitzar_llista(fila)
-    #                    for n in range(3): #mira 3 nombres d'un mateix quadrat
                     columna=[]
                     for m in range(3): #mira 3 quadrats diferents
                         if i==0 or i==3 or i==6:
@@ -199,62 +174,67 @@ def resoldre(llista,tor):
                     error2=analitzar_llista(columna)
                     print(f"quadrat:{llista[i]},{i},{j}")
                     error3=analitzar_llista(llista[i])
+                    llista[i][j]=0
                     if error1==False and error2==False and error3==False:
-                        error=False
-                        tor.penup()
-                        tor.home()
-                        if i==0:
-                            tor.setheading(135)
-                            tor.forward(180*math.sqrt(2))
-                        if i==1:
-                            tor.setheading(90)
-                            tor.forward(60*3)
-                        if i==2:
-                            tor.setheading(45)
-                            tor.forward(180*math.sqrt(2))
-                        if i==3:
-                            tor.setheading(180)
-                            tor.forward(60*3)
-                        if i==5:
-                            tor.forward(60*3)
-                        if i==6:
-                            tor.setheading(225)
-                            tor.forward(180*math.sqrt(2))
-                        if i==7:
-                            tor.setheading(270)
-                            tor.forward(60*3)
-                        if i==8:
-                            tor.setheading(315)
-                            tor.forward(180*math.sqrt(2))
-                        
-                        if j==0:
-                            tor.setheading(135)
-                            tor.forward(60*math.sqrt(2))
-                        if j==1:
-                            tor.setheading(90)
-                            tor.forward(60)
-                        if j==2:
-                            tor.setheading(45)
-                            tor.forward(60*math.sqrt(2))
-                        if j==3:
-                            tor.setheading(180)
-                            tor.forward(60)
-                        if j==5:
-                            tor.setheading(0)
-                            tor.forward(60)
-                        if j==6:
-                            tor.setheading(225)
-                            tor.forward(60*math.sqrt(2))
-                        if j==7:
-                            tor.setheading(270)
-                            tor.forward(60)
-                        if j==8:
-                            tor.setheading(315)
-                            tor.forward(60*math.sqrt(2))
-                        tor.setheading(180+63.435)
-                        tor.forward(10*math.sqrt(5))
-                        tor.write(nombres[cont],False,"left",("Arial",30))
+                        possib[i][j].append(nombres[cont])                       
                     cont+=1
+                print(possib[i][j])
+                if len(possib[i][j])==1 and cont==9:
+                    tor.penup()
+                    tor.home()
+                    if i==0:
+                        tor.setheading(135)
+                        tor.forward(180*math.sqrt(2))
+                    if i==1:
+                        tor.setheading(90)
+                        tor.forward(60*3)
+                    if i==2:
+                        tor.setheading(45)
+                        tor.forward(180*math.sqrt(2))
+                    if i==3:
+                        tor.setheading(180)
+                        tor.forward(60*3)
+                    if i==5:
+                        tor.forward(60*3)
+                    if i==6:
+                        tor.setheading(225)
+                        tor.forward(180*math.sqrt(2))
+                    if i==7:
+                        tor.setheading(270)
+                        tor.forward(60*3)
+                    if i==8:
+                        tor.setheading(315)
+                        tor.forward(180*math.sqrt(2))
+                    
+                    if j==0:
+                        tor.setheading(135)
+                        tor.forward(60*math.sqrt(2))
+                    if j==1:
+                        tor.setheading(90)
+                        tor.forward(60)
+                    if j==2:
+                        tor.setheading(45)
+                        tor.forward(60*math.sqrt(2))
+                    if j==3:
+                        tor.setheading(180)
+                        tor.forward(60)
+                    if j==5:
+                        tor.setheading(0)
+                        tor.forward(60)
+                    if j==6:
+                        tor.setheading(225)
+                        tor.forward(60*math.sqrt(2))
+                    if j==7:
+                        tor.setheading(270)
+                        tor.forward(60)
+                    if j==8:
+                        tor.setheading(315)
+                        tor.forward(60*math.sqrt(2))
+                    tor.setheading(180+63.435)
+                    tor.forward(10*math.sqrt(5))
+                    tor.write(possib[i][j][0],False,"left",("Arial",30))
+                    llista[i][j]=possib[i][j][0]
+                    
     
 
 fin=finestra()
@@ -268,5 +248,4 @@ fin.onscreenclick(sudoku)
 fin.listen()
 tl.mainloop()   
 #tl.done()    
-    
     
