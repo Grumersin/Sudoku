@@ -116,24 +116,17 @@ def sudoku(xr,yr):
             for i in range(3): #mira 3 nombres d'un mateix quadrat
                 fila=[]
                 for j in range(3): #mira 3 quadrats consecutius
-                    fila[100:100]=llista[(j)+3*(k)][0+3*(i):3+3*(i)]
-#                print(fila)
+                    fila[100:100]=llista[j+3*k][0+3*i:3+3*i]
+                print(f"fila:{fila}")
                 analitzar_llista(fila)
+        for k in range(3): #mira 3 columnes de quadrats
+            for i in range(3): #mira 3 nombres d'un mateix quadrat
+                columna=[]
+                for j in range(3): #mira 3 quadrats diferents
+                    columna[100:100]=llista[j*3+k][i],llista[j*3+k][i+3],llista[j*3+k][i+6]
+                print(f"columna:{columna}")
+                analitzar_llista(columna) 
         
-#def analitzar_columna(llista):
-#    for i in range(9):
-    
-'''def analitzar_fila(llista,n,m): #Revisar sencer, està a mig intentar
-    error=False
-    fila=[]
-    for n in range(9):
-        for i in range(3):
-            fila.append(llista[(i+n-2)][0*n:3*n])
-        for i in range(len(fila)):
-            for j in range(len(fila)):
-                if fila[i-1]==fila[j-1] and i!=j:
-                    error=True
-    print(error)'''
     
 def analitzar_llista(llista):
     for i in range(len(llista)):
@@ -141,8 +134,8 @@ def analitzar_llista(llista):
             if i!=j and llista[i-1]!=0  and llista[j-1]!=0:
                 if llista[i-1]==llista[j-1]:
                     print(f"Error: el valor en la posició {i} ({llista[i-1]}) és igual al valor en la posició {j} ({llista[j-1]}).")
-                else:
-                    print("Tot correcte")
+#                else:
+#                    print("Tot correcte")
     
 #def analitzar_quadrat(llista):
     
@@ -154,7 +147,6 @@ graella(tor,60)
 llista=[[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0]]  
     
 fin.onscreenclick(sudoku)
-#sudoku()
  
 fin.listen()
 tl.mainloop()   
