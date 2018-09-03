@@ -105,7 +105,7 @@ def posar_numero(x1,y1,tor,llista):
         tor.write(llista[1+posx+posy][1+posxx+posyy],False,"left",("Arial",30))
         tor.color("black")
     llista[1+posx+posy][1+posxx+posyy]=text
-    if text==0:
+    if text=='0':
         tor.color("white")
         tor.write(int(text),False,"left",("Arial",30))
         tor.color("black")
@@ -300,6 +300,7 @@ def resoldre(llista,tor):
 #                print(f"possib:{possib[i][j]},{i},{j}")
                 if len(possib[i][j])==1 and cont==9:
                     dibuixar(i,j,possib[i][j][0])
+                    print(f"Posat nombre {possib[i][j][0]} en la cel.la ({i},{j}) ja que cap altre nombre hi podia anar.")
                     eliminar_possib(possib,i,j,possib[i][j][0])
                     
     for n in range(9): #quadrat
@@ -359,14 +360,7 @@ def resoldre(llista,tor):
                     columna.append([mz1*3+ky,l])
                     columna.append([mz1*3+ky,l+3])
                     columna.append([mz1*3+ky,l+6])
-#                print(mz1,ky,mz1*3+k)
-            #    print(columna)
                 for mz2 in range(len(columna)):
-#                    print("mz2",mz2)
-#                    print("columna",columna)
-#                    print("columna[mz2]",columna[mz2])
-#                    print("possib[columna[mz2][0]]",possib[columna[mz2][0]])
-#                    print("len(possib[columna[mz2][0]])",len(possib[columna[mz2][0]]))
                     z=(nombres[i] in possib[columna[mz2][0]][columna[mz2][1]])
                     if z==True:
                         sumz+=1
@@ -378,16 +372,19 @@ def resoldre(llista,tor):
             if sumx==1:
 #                print(nomx,"únic", (qx,cx))
                 dibuixar(qx,cx,nomx)
+                print(f"Posat nombre {nomx} en la cel.la ({qx},{cx}) ja que era l'única del quadrat {qx} que tenia a {nomx} de candidat.")
                 eliminar_possib(possib,qx,cx,nomx)
 #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
             if sumy==1:
 #                print(nomy,"únic", (qy,cy))
                 dibuixar(qy,cy,nomy)
+                print(f"Posat nombre {nomy} en la cel.la ({qy},{cy}) ja que era l'única de la fila que tenia a {nomx} de candidat.")
                 eliminar_possib(possib,qy,cy,nomy)
 #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
             if sumz==1:
 #                print(nomz,"únic", (qz,cz))
                 dibuixar(qz,cz,nomz)
+                print(f"Posat nombre {nomz} en la cel.la ({qz},{cz}) ja que era l'única de la columna que tenia a {nomx} de candidat.")
                 eliminar_possib(possib,qz,cz,nomz)
 #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
 
