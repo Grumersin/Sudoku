@@ -341,7 +341,7 @@ def resoldre(llista,tor):
                 if sumy==1:
     #                print(nomy,"únic", (qy,cy))
                     dibuixar(qy,cy,nomy)
-                    print(f"Posat nombre {nomy} en la cel.la ({qy},{cy}) ja que era l'única de la fila que tenia a {nomx} de candidat.")
+                    print(f"Posat nombre {nomy} en la cel.la ({qy},{cy}) ja que era l'única de la fila que tenia a {nomy} de candidat.")
                     eliminar_possib(possib,qy,cy,nomy)
     #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
                 columna=[]
@@ -365,14 +365,13 @@ def resoldre(llista,tor):
                     z=(nombres[j] in possib[columna[mz2][0]][columna[mz2][1]])
                     if z==True:
                         sumz+=1
-                        print(nombres[j],sumz)
                         qz=columna[mz2][0]
                         cz=columna[mz2][1]
                         nomz=nombres[j]
                 if sumz==1:
     #                print(nomz,"únic", (qz,cz))
                     dibuixar(qz,cz,nomz)
-                    print(f"Posat nombre {nomz} en la cel.la ({qz},{cz}) ja que era l'única de la columna que tenia a {nomx} de candidat.")
+                    print(f"Posat nombre {nomz} en la cel.la ({qz},{cz}) ja que era l'única de la columna que tenia a {nomz} de candidat.")
                     eliminar_possib(possib,qz,cz,nomz)
     #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
 #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
