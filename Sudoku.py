@@ -105,16 +105,33 @@ def posar_numero(x1,y1,tor,llista):
         tor.write(llista[1+posx+posy][1+posxx+posyy],False,"left",("Arial",30))
         tor.color("black")
     llista[1+posx+posy][1+posxx+posyy]=text
-    if text=='0':
+    if text!='1' and text!='2' and text!='3' and text!='4' and text!='5' and text!='6' and text!='7' and text!='8' and text!='9':
         tor.color("white")
-        tor.write(int(text),False,"left",("Arial",30))
+        tor.write(0,False,"left",("Arial",30))
         tor.color("black")
     else:
         tor.write(int(text),False,"left",("Arial",30))
+        
+        
+def analitzar_llista(llista):
+    suma=0
+    for i in range(len(llista)):
+        for j in range(i):
+            if i!=j and llista[i]!=0  and llista[j]!=0:
+                if llista[i]==llista[j]:
+#                    print(f"Error: el valor en la posició {i} ({llista[i]}) és igual al valor en la posició {j} ({llista[j]}).")
+                    suma+=1
+    if suma!=0:
+        error=True
+        return error
+    else:
+        error=False
+        return error
     
 def dibuixar(q,c,nom):    
     tor.penup()
     tor.home()
+    #mira el quadrat
     if q==0:
         tor.setheading(135)
         tor.forward(180*math.sqrt(2))
@@ -138,7 +155,7 @@ def dibuixar(q,c,nom):
     if q==8:
         tor.setheading(315)
         tor.forward(180*math.sqrt(2))
-    
+    #mira la cel.la
     if c==0:
         tor.setheading(135)
         tor.forward(60*math.sqrt(2))
@@ -222,35 +239,10 @@ def eliminar_possib(possib,i,j,n):
             possib[columna[m][0]][columna[m][1]].remove(n)
     
     
-def sudoku(xr,yr):
-    global tor
-    global llista
-    
-    if xr<60*4.5 and xr>-60*4.5 and yr<60*4.5 and yr>-60*4.5:
-        posar_numero(xr,yr,tor,llista)
-    else:
-        resoldre(llista,tor)
-        
-    
-def analitzar_llista(llista):
-    suma=0
-    for i in range(len(llista)):
-        for j in range(i):
-            if i!=j and llista[i]!=0  and llista[j]!=0:
-                if llista[i]==llista[j]:
-#                    print(f"Error: el valor en la posició {i} ({llista[i]}) és igual al valor en la posició {j} ({llista[j]}).")
-                    suma+=1
-    if suma!=0:
-        error=True
-        return error
-    else:
-        error=False
-        return error
-
-
 def resoldre(llista,tor):
     nombres=['1','2','3','4','5','6','7','8','9']
     possib=[[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]],[[],[],[],[],[],[],[],[],[]]]
+    #crea la llista de candidats per cada cel.la
     for i in range(9): #quadrat
         for j in range(9): #cel·la
             if llista[i][j]==0:
@@ -289,35 +281,39 @@ def resoldre(llista,tor):
                         if j==2 or j==5 or j==8:
                             n=2
                         columna[100:100]=llista[m*3+k][n],llista[m*3+k][n+3],llista[m*3+k][n+6]
-#                    print(f"columna:{columna},{i},{j}")
                     error2=analitzar_llista(columna)
-#                    print(f"quadrat:{llista[i]},{i},{j}")
                     error3=analitzar_llista(llista[i])
                     llista[i][j]=0
                     if error1==False and error2==False and error3==False:
                         possib[i][j].append(nombres[cont])                       
                     cont+=1
-#                print(f"possib:{possib[i][j]},{i},{j}")
                 if len(possib[i][j])==1 and cont==9:
                     dibuixar(i,j,possib[i][j][0])
                     print(f"Posat nombre {possib[i][j][0]} en la cel.la ({i},{j}) ja que cap altre nombre hi podia anar.")
                     eliminar_possib(possib,i,j,possib[i][j][0])
-                    
+    #mira els candidats en el quadrat, la fila i la columna on està cada cel.la
     for n in range(9): #quadrat
         for i in range(9): #els 9 nombres
-            sumx=0
-            sumy=0
-            sumz=0
-            nomx=0
-            nomy=0
-            nomz=0
             for j in range(9): #cel.la
-                x=(nombres[i] in possib[n][j]) #mira en el quadrat
-                if x==True:
-                    sumx+=1
-                    qx=n
-                    cx=j
-                    nomx=nombres[i]
+                sumx=0
+                sumy=0
+                sumz=0
+                nomx=0
+                nomy=0
+                nomz=0
+                for mx1 in range(9):
+                    x=(nombres[i] in possib[n][mx1]) #mira en el quadrat
+                    if x==True:
+                        sumx+=1
+                        qx=n
+                        cx=mx1
+                        nomx=nombres[i]
+                if sumx==1:
+    #                print(nomx,"únic", (qx,cx))
+                    dibuixar(qx,cx,nomx)
+                    print(f"Posat nombre {nomx} en la cel.la ({qx},{cx}) ja que era l'única del quadrat {qx} que tenia a {nomx} de candidat.")
+                    eliminar_possib(possib,qx,cx,nomx)
+    #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
                 fila=[]
                 for my1 in range(3): #fila
                     if n<3:
@@ -326,23 +322,28 @@ def resoldre(llista,tor):
                         kx=6
                     else:
                         kx=3
-                    if j<3:
+                    if i<3:
                         l=0
-                    elif j>5:
+                    elif i>5:
                         l=6
                     else:
                         l=3
                     fila.append([kx+my1,0+l])
                     fila.append([kx+my1,1+l])
                     fila.append([kx+my1,2+l])
-            #    print(fila)
                 for my2 in range(len(fila)):
-                    y=(nombres[i] in possib[fila[my2][0]][fila[my2][1]])
+                    y=(nombres[j] in possib[fila[my2][0]][fila[my2][1]])
                     if y==True:
                         sumy+=1
-                        qy=n
-                        cy=j
-                        nomy=nombres[i]
+                        qy=fila[my2][0]
+                        cy=fila[my2][1]
+                        nomy=nombres[j]
+                if sumy==1:
+    #                print(nomy,"únic", (qy,cy))
+                    dibuixar(qy,cy,nomy)
+                    print(f"Posat nombre {nomy} en la cel.la ({qy},{cy}) ja que era l'única de la fila que tenia a {nomx} de candidat.")
+                    eliminar_possib(possib,qy,cy,nomy)
+    #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
                 columna=[]
                 for mz1 in range(3): #columna
                     if n==0 or n==3 or n==6:
@@ -351,42 +352,41 @@ def resoldre(llista,tor):
                         ky=1
                     if n==2 or n==5 or n==8:
                         ky=2
-                    if j==0 or j==3 or j==6:
+                    if i==0 or i==3 or i==6:
                         l=0
-                    if j==1 or j==4 or j==7:
+                    if i==1 or i==4 or i==7:
                         l=1
-                    if j==2 or j==5 or j==8:
+                    if i==2 or i==5 or i==8:
                         l=2
                     columna.append([mz1*3+ky,l])
                     columna.append([mz1*3+ky,l+3])
                     columna.append([mz1*3+ky,l+6])
                 for mz2 in range(len(columna)):
-                    z=(nombres[i] in possib[columna[mz2][0]][columna[mz2][1]])
+                    z=(nombres[j] in possib[columna[mz2][0]][columna[mz2][1]])
                     if z==True:
                         sumz+=1
-                        qz=n
-                        cz=j
-                        nomz=nombres[i]               
+                        print(nombres[j],sumz)
+                        qz=columna[mz2][0]
+                        cz=columna[mz2][1]
+                        nomz=nombres[j]
+                if sumz==1:
+    #                print(nomz,"únic", (qz,cz))
+                    dibuixar(qz,cz,nomz)
+                    print(f"Posat nombre {nomz} en la cel.la ({qz},{cz}) ja que era l'única de la columna que tenia a {nomx} de candidat.")
+                    eliminar_possib(possib,qz,cz,nomz)
+    #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
 #            print(f"possibilitats en el quadrat {n}: {possib[n]}")
 #            print(nomx,sumx)
-            if sumx==1:
-#                print(nomx,"únic", (qx,cx))
-                dibuixar(qx,cx,nomx)
-                print(f"Posat nombre {nomx} en la cel.la ({qx},{cx}) ja que era l'única del quadrat {qx} que tenia a {nomx} de candidat.")
-                eliminar_possib(possib,qx,cx,nomx)
-#            print(f"possibilitats en el quadrat {n}: {possib[n]}")
-            if sumy==1:
-#                print(nomy,"únic", (qy,cy))
-                dibuixar(qy,cy,nomy)
-                print(f"Posat nombre {nomy} en la cel.la ({qy},{cy}) ja que era l'única de la fila que tenia a {nomx} de candidat.")
-                eliminar_possib(possib,qy,cy,nomy)
-#            print(f"possibilitats en el quadrat {n}: {possib[n]}")
-            if sumz==1:
-#                print(nomz,"únic", (qz,cz))
-                dibuixar(qz,cz,nomz)
-                print(f"Posat nombre {nomz} en la cel.la ({qz},{cz}) ja que era l'única de la columna que tenia a {nomx} de candidat.")
-                eliminar_possib(possib,qz,cz,nomz)
-#            print(f"possibilitats en el quadrat {n}: {possib[n]}")
+
+
+def sudoku(xr,yr):
+    global tor
+    global llista
+    
+    if xr<60*4.5 and xr>-60*4.5 and yr<60*4.5 and yr>-60*4.5:
+        posar_numero(xr,yr,tor,llista)
+    else:
+        resoldre(llista,tor)
 
 fin=finestra()
 tor=punter()
